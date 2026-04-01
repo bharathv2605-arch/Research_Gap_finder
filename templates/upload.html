@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Papers - Research Gap Finder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+            </svg>
+            Research Gap Finder
+        </div>
+        <div class="navbar-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('upload') }}" style="color:#fff;">Upload Papers</a>
+        </div>
+        <div class="navbar-user">
+            <span>Logged in as <strong>{{ session.username }}</strong></span>
+            <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.3);margin-left:0.5rem;">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Upload Research Papers</h1>
+            <p>Upload one or more research papers in PDF, TXT, or DOCX format</p>
+        </div>
+
+        <!-- Upload Card -->
+        <div class="card" style="max-width:700px;">
+            <div class="card-header">
+                <h2>Select Files</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data" id="upload-form">
+                    <!-- Drag & Drop Upload Area -->
+                    <div class="upload-area" id="upload-area">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                        <h3>Drag & Drop files here</h3>
+                        <p>or click to browse your computer</p>
+                        <p style="margin-top:0.5rem;font-size:0.75rem;color:#94a3b8;">
+                            Supported formats: PDF, TXT, DOCX &bull; Max 16 MB per file
+                        </p>
+                    </div>
+
+                    <!-- Hidden File Input (supports multiple files) -->
+                    <input type="file" id="file-input" name="files" multiple
+                           accept=".pdf,.txt,.docx" style="display:none;">
+
+                    <!-- Selected Files Display -->
+                    <div id="file-list" class="file-list"></div>
+
+                    <!-- Upload Button -->
+                    <div style="margin-top:1.5rem;display:flex;gap:1rem;">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                            </svg>
+                            Upload Files
+                        </button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline btn-lg">
+                            Back to Dashboard
+                        </a>
+                    </div>
+
+                    <!-- Loading Spinner -->
+                    <div class="spinner" id="upload-spinner">
+                        <div class="spinner-circle"></div>
+                        <p>Uploading and processing files... Please wait.</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tips Card -->
+        <div class="card" style="max-width:700px;margin-top:1.5rem;">
+            <div class="card-header">
+                <h2>Tips for Best Results</h2>
+            </div>
+            <div class="card-body" style="font-size:0.9rem;color:#475569;">
+                <ul style="padding-left:1.25rem;line-height:2;">
+                    <li>Upload <strong>at least 2 papers</strong> for comparison and gap analysis</li>
+                    <li>Papers should be on <strong>related topics</strong> for meaningful comparison</li>
+                    <li>PDF files with <strong>selectable text</strong> work best (not scanned images)</li>
+                    <li>Longer papers with <strong>more content</strong> produce better keyword extraction</li>
+                    <li>You can upload papers from <strong>different sub-topics</strong> to find cross-domain gaps</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Research Gap Finder &mdash; AI Based Research Paper Analysis System
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
